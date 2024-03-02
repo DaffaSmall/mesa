@@ -38,10 +38,8 @@
 
 #if defined(HAVE_MEMFD_CREATE) || defined(__FreeBSD__) || defined(__OpenBSD__)
 #include <sys/mman.h>
-#elif defined(ANDROID)
 #include <sys/syscall.h>
 #include <linux/memfd.h>
-#else
 #include <stdio.h>
 #endif
 
@@ -119,7 +117,7 @@ os_create_anonymous_file(int64_t size, const char *debug_name)
 #if defined(HAVE_MEMFD_CREATE)
    if (!debug_name)
       debug_name = "mesa-shared";
-   fd = syscall(SYS_memfd_create, debug_name, MFD_CLOEXEC | MFD_ALLOW_SEALING);
+   fd = memfd_create(SYS_memfd_create, debug_name, MFD_CLOEXEC | MFD_ALLOW_SEALING);
 #elif defined(ANDROID)
    if (!debug_name)
       debug_name = "mesa-shared";
